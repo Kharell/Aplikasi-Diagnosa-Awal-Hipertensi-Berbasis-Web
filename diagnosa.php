@@ -38,3 +38,6 @@ function klasifikasi($sistol,$diastol){
 </table>
 </body>
 </html>
+
+
+<h1>tambahkan halaman tampilan yang baik dan berikan sepifikasi dari hasil klasifikasi alasan yang jelas untuk menangani masalah nya</h1>

@@ -189,3 +189,6 @@ $(document).ready(function(){
 </script>
 </body>
 </html>
+
+<center>
+<h1>tampilkan semua data untuk tampilan dahbord</h1>
