@@ -13,8 +13,9 @@ $admin = htmlspecialchars($_SESSION['username']);
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        body { overflow-x: hidden; }
+        body { overflow-x: hidden; background-color: #f5f7fa; }
         .navbar-brand { font-weight: bold; }
         .admin-info { display: flex; align-items: center; gap: 8px; color: #fff; font-weight: 500; }
         .admin-info i { font-size: 20px; }
@@ -32,20 +33,29 @@ $admin = htmlspecialchars($_SESSION['username']);
         .sidebar.collapsed ~ #content { margin-left:70px; }
 
         /* Info box dashboard */
-        .info-box {
-            background-color:#f8f9fa; 
-            border-radius:8px; 
-            padding:20px; 
-            margin-bottom:20px; 
-            box-shadow:0 2px 6px rgba(0,0,0,0.1); 
-            transition: all 0.3s ease;
-            cursor:pointer;
-        }
-        .info-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            background-color:#e9ecef;
-        }
+       .info-box {
+    background-color:#fff; 
+    border-radius:10px; 
+    padding:25px; 
+    margin-bottom:25px; 
+    box-shadow:0 3px 10px rgba(0,0,0,0.1); 
+    transition: all 0.3s ease;
+    cursor:pointer;
+}
+.info-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    background-color:#f8f9fa;
+}
+
+/* 🔹 Fokus ke angka saja */
+.info-box h2 {
+    font-size: 2.5rem;   /* ukuran angka seragam */
+    font-weight: 800;    /* ketebalan sama */
+    color: #212529;      /* warna teks seragam */
+    margin-top: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -70,32 +80,39 @@ $admin = htmlspecialchars($_SESSION['username']);
 <!-- Konten utama -->
 <div id="content">
     <div class="text-center mt-5">
-        <h2 class="fw-bold text-dark">Selamat Datang, <?php echo $admin; ?>! 🎉</h2>
+        <h2 class="fw-bold text-dark">Selamat Datang, <?php echo $admin; ?>! 🎉</h2> 
         <br>
         <p class="lead text-muted">
-            Semoga hari Anda menyenangkan & penuh semangat.<br>
-            Teruslah memberikan pelayanan terbaik dengan sistem ini 💪.
+           <b> Semoga hari Anda menyenangkan & penuh semangat.<br>
+            Teruslah memberikan pelayanan terbaik dengan sistem ini 💪.</b>
         </p>
+        
         <br>
-        <br>
-        <!-- Info tambahan agar dashboard tidak terlihat kosong -->
+
+        <!-- Info Box -->
         <div class="row mt-4">
             <div class="col-md-4">
-                <div class="info-box text-center" id="boxPasien">
-                    <h4>Total Pasien</h4>
-                    <p id="totalPasien">Loading...</p>
+                <div class="info-box text-center border-start border-primary border-4 shadow-sm" id="boxPasien">
+                    <i class="bi bi-people-fill text-primary" style="font-size: 40px;"></i>
+                    <h4 class="mt-2 fw-bold">Total Pasien</h4>
+                    <h2 class="text-dark fw-bolder mt-2" id="totalPasien">Loading...</h2>
+                    <p class="text-muted">Jumlah seluruh pasien terdaftar</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="info-box text-center" id="boxRekam">
-                    <h4>Rekam Medis Terbaru</h4>
-                    <p id="rekamTerbaru">Loading...</p>
+                <div class="info-box text-center border-start border-success border-4 shadow-sm" id="boxRekam">
+                    <i class="bi bi-clipboard2-pulse text-success" style="font-size: 40px;"></i>
+                    <h4 class="mt-2 fw-bold">Rekam Medis Terbaru</h4>
+                    <h2 class="text-dark mt-2 fw-semibold" id="rekamTerbaru">Loading...</h2>
+                    <p class="text-muted">Data rekam medis terbaru pasien</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="info-box text-center" id="boxDiagnosa">
-                    <h4>Diagnosa Hari Ini</h4>
-                    <p id="diagnosaHariIni">Loading...</p>
+                <div class="info-box text-center border-start border-danger border-4 shadow-sm" id="boxDiagnosa">
+                    <i class="bi bi-heart-pulse text-danger" style="font-size: 40px;"></i>
+                    <h4 class="mt-2 fw-bold">Diagnosa Hari Ini</h4>
+                    <h2 class="text-dark fw-bolder mt-2" id="diagnosaHariIni">Loading...</h2>
+                    <p class="text-muted">Jumlah diagnosa yang dilakukan hari ini</p>
                 </div>
             </div>
         </div>
@@ -134,36 +151,7 @@ $(document).ready(function(){
 
         let page = $(this).data("page");
         if(page === "welcome") {
-            $("#content").html(`
-                <div class="text-center mt-5">
-                    <h2 class="fw-bold text-dark">Selamat Datang, <?php echo $admin; ?>! 🎉</h2>
-                    <p class="lead text-muted">
-                        Semoga hari Anda menyenangkan & penuh semangat.<br>
-                        Teruslah memberikan pelayanan terbaik dengan sistem ini 💪.
-                    </p>
-                    <div class="row mt-4">
-                        <div class="col-md-4">
-                            <div class="info-box text-center" id="boxPasien">
-                                <h4>Total Pasien</h4>
-                                <p id="totalPasien">Loading...</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-box text-center" id="boxRekam">
-                                <h4>Rekam Medis Terbaru</h4>
-                                <p id="rekamTerbaru">Loading...</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="info-box text-center" id="boxDiagnosa">
-                                <h4>Diagnosa Hari Ini</h4>
-                                <p id="diagnosaHariIni">Loading...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `);
-            loadDashboardInfo();
+            $("#content").load("dashboard.php #content>*");
         } else {
             $("#content").load(page, loadDashboardInfo);
         }
@@ -183,12 +171,9 @@ $(document).ready(function(){
         });
     }
 
-    // Load dashboard info pertama kali
+    // Load pertama kali
     loadDashboardInfo();
 });
 </script>
 </body>
 </html>
-
-<center>
-<h1>tampilkan semua data untuk tampilan dahbord</h1>
