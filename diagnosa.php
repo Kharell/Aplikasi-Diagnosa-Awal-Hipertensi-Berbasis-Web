@@ -71,37 +71,42 @@ function klasifikasi($sistol, $diastol)
     <br>
     <h3 class="mb-4"><i>Analisis dan Penanganan Berdasarkan Hasil Rekam Medis</i></h3>
 
-    <table class="table table-bordered shadow-sm">
-        <thead class="table-primary text-center">
-            <tr>
-                <th>Nama Pasien</th>
-                <th>Sistol (mmHg)</th>
-                <th>Diastol (mmHg)</th>
-                <th>Klasifikasi</th>
-                <th>Keterangan & Saran Penanganan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $rekam->fetch_assoc()) {
-                $hasil = klasifikasi($row["212341_tekanan_sistol"], $row["212341_tekanan_diastol"]);
-                $kategori = $hasil["kategori"];
-                $deskripsi = $hasil["deskripsi"];
+   <table class="table table-bordered shadow-sm">
+    <thead class="table-primary text-center">
+        <tr>
+            <th>No</th>
+            <th>Nama Pasien</th>
+            <th>Sistol (mmHg)</th>
+            <th>Diastol (mmHg)</th>
+            <th>Klasifikasi</th>
+            <th>Keterangan & Saran Penanganan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php 
+        $no = 1; // 🔹 Nomor urut dimulai dari 1
+        while ($row = $rekam->fetch_assoc()) {
+            $hasil = klasifikasi($row["212341_tekanan_sistol"], $row["212341_tekanan_diastol"]);
+            $kategori = $hasil["kategori"];
+            $deskripsi = $hasil["deskripsi"];
 
-                // Warna badge berdasarkan kategori
-                $warna = $kategori == "Normal" ? "success" : ($kategori == "Pre-Hipertensi" ? "warning" : "danger");
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($row["212341_nama"]) ?></td>
-                <td class="text-center"><?= htmlspecialchars($row["212341_tekanan_sistol"]) ?></td>
-                <td class="text-center"><?= htmlspecialchars($row["212341_tekanan_diastol"]) ?></td>
-                <td class="text-center">
-                    <span class="badge bg-<?= $warna ?>"><?= $kategori ?></span>
-                </td>
-                <td><?= $deskripsi ?></td>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
+            // Warna badge berdasarkan kategori
+            $warna = $kategori == "Normal" ? "success" : ($kategori == "Pre-Hipertensi" ? "warning" : "danger");
+        ?>
+        <tr>
+            <td class="text-center"><?= $no++; ?></td>
+            <td><?= htmlspecialchars($row["212341_nama"]) ?></td>
+            <td class="text-center"><?= htmlspecialchars($row["212341_tekanan_sistol"]) ?></td>
+            <td class="text-center"><?= htmlspecialchars($row["212341_tekanan_diastol"]) ?></td>
+            <td class="text-center">
+                <span class="badge bg-<?= $warna ?>"><?= $kategori ?></span>
+            </td>
+            <td><?= $deskripsi ?></td>
+        </tr>
+        <?php } ?>
+    </tbody>
+</table>
+
 
     <div class="alert alert-info mt-4">
         <strong>Catatan:</strong> Data di atas hanya bersifat informatif. Jika tekanan darah tidak stabil, disarankan untuk melakukan pemeriksaan medis lebih lanjut di fasilitas kesehatan terdekat.

@@ -125,9 +125,9 @@ $rows = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 
 <h2 class="mb-4">Data Rekam Medis</h2>
 
-<button class="btn btn-success mb-3" id="btnTambah">
+<!-- <button class="btn btn-success mb-3" id="btnTambah">
     <i class="bi bi-file-earmark-plus"></i> Tambah Rekam
-</button>
+</button> -->
 
 <style>
 #tableRekam th { text-align: center; vertical-align: middle; background-color: #343a40; color: #fff; }
@@ -194,12 +194,12 @@ function refreshTable(){
     });
 }
 
-$(document).on("click","#btnTambah",function(){
-    $.get("form_rekam.php", function(html){
-        $("#bodyForm").html(html);
-        new bootstrap.Modal(document.getElementById('modalForm')).show();
-    });
-});
+// $(document).on("click","#btnTambah",function(){
+//     $.get("form_rekam.php", function(html){
+//         $("#bodyForm").html(html);
+//         new bootstrap.Modal(document.getElementById('modalForm')).show();
+//     });
+// });
 
 $(document).on("click",".btnEdit",function(){
     let id=$(this).data("id");

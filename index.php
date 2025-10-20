@@ -1,135 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Utama | Diagnosa Hipertensi</title>
 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<?php
-include "config.php";
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-$error = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $sql = "SELECT * FROM 212341_admin WHERE 212341_username = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $res = $stmt->get_result();
-
-    if ($res->num_rows > 0) {
-        $row = $res->fetch_assoc();
-
-        if ($password === $row['212341_password']) {
-            $_SESSION['admin_id'] = $row['212341_admin_id'];
-            $_SESSION['username'] = $row['212341_username'];
-            header("Location: dashboard.php");
-            exit;
-        } else {
-            $error = "Password salah!";
-        }
-    } else {
-        $error = "Username tidak ditemukan!";
-    }
-}
-?>
-
-    <title>Login Diagnosa Hipertensi</title>
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
             background: linear-gradient(135deg, #89f7fe, #66a6ff);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        h1, h2, h3 {
-            font-weight: bold;
-        }
-        .app-title {
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
-            color: #fff;
-            margin-bottom: 40px;
+            padding: 20px;
         }
-        .app-title h1 {
-            font-size: 28px;
+        h2 {
+            color: #000000ff;
             font-weight: 700;
-        }
-        .app-title h2 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-top: -5px;
-        }
-        .title-icon {
-            font-size: 40px;
-            color: #fff;
             margin-bottom: 10px;
         }
-        .form-control {
-            border-radius: 10px;
+        p {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
         }
-        .btn-primary {
-            border-radius: 10px;
+        .main-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 480px;
+            width: 100%;
         }
-        .input-group-text {
-            cursor: pointer;
-            border-radius: 0 10px 10px 0;
+        a.btn {
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1.05rem;
+            transition: all 0.3s ease;
+        }
+        a.btn:hover {
+            transform: scale(1.05);
+        }
+        footer {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #777;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Judul aplikasi -->
-    <div class="app-title">
-        <i class="bi bi-heart-pulse-fill title-icon"></i>
-        <h1>Aplikasi Diagnosa Awal</h1>
-        <h2>Hipertensi Berbasis Web</h2>
-    </div>
 
-    <div class="col-md-5 mx-auto">
-        <div class="card p-4">
-            <h3 class="text-center mb-3">Login</h3>
-            <?php if (!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
-            <?php if (isset($_GET['register']) && $_GET['register'] == "success") echo "<div class='alert alert-success'>Registrasi berhasil, silakan login.</div>"; ?>
-
-            <form method="post">
-                <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
-
-                <div class="input-group mb-3">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-                    <span class="input-group-text" onclick="togglePassword('password','toggleIcon')">
-                        <i class="bi bi-eye" id="toggleIcon"></i>
-                    </span>
-                </div>
-
-                <button class="btn btn-primary w-100">Login</button>
-            </form>
+    <!-- Judul di luar card -->
+    <h2>Aplikasi <i>Diagnosa Hipertensi</i></h2>
+    <br>
+    <!-- Card utama -->
+    <div class="main-card">
+        <div class="d-grid gap-3">
+            <a href="pasien/inputDataPasien.php" class="btn btn-success">
+                <i class="bi bi-person-fill"></i> Jika Pasien - Silahkan Input Data Kamu
+            </a>
+            <a href="login.php" class="btn btn-primary">
+                <i class="bi bi-shield-lock-fill"></i> Jika Admin - Silahkan Login
+            </a>
         </div>
-        <p class="mt-3 text-center text-white">Belum punya akun? <a href="register.php" class="text-dark fw-bold">Daftar disini</a></p>
-    </div>
-</div>
 
-<script>
-    function togglePassword(inputId, iconId) {
-        const passwordInput = document.getElementById(inputId);
-        const toggleIcon = document.getElementById(iconId);
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleIcon.classList.remove("bi-eye");
-            toggleIcon.classList.add("bi-eye-slash");
-        } else {
-            passwordInput.type = "password";
-            toggleIcon.classList.remove("bi-eye-slash");
-            toggleIcon.classList.add("bi-eye");
-        }
-    }
-</script>
+        <footer>
+            <hr>
+            <em>"Menjaga kesehatan lebih baik daripada mengobati."</em><br>
+            &copy; <?= date("Y") ?> Aplikasi Diagnosa Hipertensi
+        </footer>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

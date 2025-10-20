@@ -72,8 +72,8 @@ $admin = htmlspecialchars($_SESSION['username']);
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <a data-page="welcome" class="active"><i class="bi bi-house-door"></i> <span>Dashboard</span></a>
-    <a data-page="pasien.php"><i class="bi bi-person-plus"></i> <span>Input Pasien</span></a>
-    <a data-page="rekam.php"><i class="bi bi-file-earmark-medical"></i> <span>Input Rekam Medis</span></a>
+    <a data-page="pasien.php"><i class="bi bi-person-plus"></i> <span>Data Pasien</span></a>
+    <a data-page="rekam.php"><i class="bi bi-file-earmark-medical"></i> <span>Data Rekam Medis</span></a>
     <a data-page="diagnosa.php"><i class="bi bi-activity"></i> <span>Lihat Diagnosa</span></a>
 </div>
 

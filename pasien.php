@@ -52,9 +52,9 @@ $rows=$res?$res->fetch_all(MYSQLI_ASSOC):[];
 
 <h2 class="mb-4">Data Pasien</h2>
 
-<button class="btn btn-success mb-3" id="btnTambah">
+<!-- <button class="btn btn-success mb-3" id="btnTambah">
     <i class="bi bi-person-plus"></i> Tambah Pasien
-</button>
+</button> -->
 
 <style>
 #tablePasien th {
@@ -144,12 +144,12 @@ function refreshTable(){
 }
 
 // 🔹 Tambah
-$(document).on("click","#btnTambah",function(){
-    $.get("form_pasien.php", function(html){
-        $("#bodyForm").html(html);
-        new bootstrap.Modal(document.getElementById('modalForm')).show();
-    });
-});
+// $(document).on("click","#btnTambah",function(){
+//     $.get("form_pasien.php", function(html){
+//         $("#bodyForm").html(html);
+//         new bootstrap.Modal(document.getElementById('modalForm')).show();
+//     });
+// });
 
 // 🔹 Edit
 $(document).on("click",".btnEdit",function(){

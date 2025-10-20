@@ -2,7 +2,6 @@
 include "config.php";
 
 $error = "";
-$success = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
@@ -28,8 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("ss", $username, $password);
 
             if ($stmt->execute()) {
-                // Redirect langsung ke login
-                header("Location: index.php?register=success");
+                // Redirect langsung ke login.php
+                header("Location: login.php?register=success");
                 exit;
             } else {
                 $error = "Gagal membuat akun: " . $conn->error;
@@ -38,13 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Register Admin</title>
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
@@ -53,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: 'Poppins', sans-serif;
         }
         .card {
             border-radius: 15px;
@@ -80,11 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="card p-4">
             <h3 class="text-center mb-4">Register Akun</h3>
             <?php if (!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
-            <?php if (!empty($success)) echo "<div class='alert alert-success'>$success</div>"; ?>
             <form method="post">
                 <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
 
-                <!-- Password -->
                 <div class="input-group mb-3">
                     <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                     <span class="input-group-text" onclick="togglePassword('password','toggleIcon1')">
@@ -92,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </span>
                 </div>
 
-                <!-- Konfirmasi Password -->
                 <div class="input-group mb-3">
                     <input type="password" id="confirm" name="confirm" class="form-control" placeholder="Konfirmasi Password" required>
                     <span class="input-group-text" onclick="togglePassword('confirm','toggleIcon2')">
@@ -103,24 +98,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button class="btn btn-success w-100">Register</button>
             </form>
         </div>
-             <p class="mt-3 text-center text-white">Sudah punya akun? <a href="index.php" class="text-dark fw-bold">Login disini</a></p>
+        <p class="mt-3 text-center text-white">Sudah punya akun? <a href="login.php" class="text-dark fw-bold">Login disini</a></p>
     </div>
 </div>
 
 <script>
-    function togglePassword(inputId, iconId) {
-        const passwordInput = document.getElementById(inputId);
-        const toggleIcon = document.getElementById(iconId);
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleIcon.classList.remove("bi-eye");
-            toggleIcon.classList.add("bi-eye-slash");
-        } else {
-            passwordInput.type = "password";
-            toggleIcon.classList.remove("bi-eye-slash");
-            toggleIcon.classList.add("bi-eye");
-        }
+function togglePassword(inputId, iconId) {
+    const passwordInput = document.getElementById(inputId);
+    const toggleIcon = document.getElementById(iconId);
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.replace("bi-eye","bi-eye-slash");
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.replace("bi-eye-slash","bi-eye");
     }
+}
 </script>
 </body>
 </html>
