@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 17, 2025 at 11:39 AM
+-- Generation Time: Oct 21, 2025 at 03:59 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.22
 
@@ -62,10 +62,14 @@ CREATE TABLE `212341_diagnosa` (
 
 INSERT INTO `212341_diagnosa` (`212341_diagnosa_id`, `212341_rekam_id`, `212341_klasifikasi`, `212341_hasil`, `212341_tanggal_hasil`) VALUES
 (8, 12, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-16'),
-(9, 13, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-16'),
-(10, 13, 'Normal', 'Tekanan darah normal', '2025-10-16'),
-(11, 14, 'Hipertensi', 'Segera periksa ke dokter. Tekanan darah tinggi', '2025-10-16'),
-(12, 15, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-17');
+(12, 15, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-17'),
+(19, 40, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-20'),
+(24, 45, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-20'),
+(25, 46, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-20'),
+(26, 12, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-16'),
+(27, 12, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat', '2025-10-16'),
+(28, 46, 'Hipertensi', 'Segera periksa ke dokter. Tekanan darah tinggi', '2025-10-20'),
+(29, 47, 'Normal', 'Tekanan darah normal', '2025-10-20');
 
 -- --------------------------------------------------------
 
@@ -93,9 +97,11 @@ CREATE TABLE `212341_pasien` (
 
 INSERT INTO `212341_pasien` (`212341_pasien_id`, `212341_nama`, `212341_umur`, `212341_alamat`, `212341_jk`, `212341_berat_badan`, `212341_riwayat_tekanan`, `212341_pola_makan`, `212341_riwayat_keluarga`, `212341_keluhan`, `212341_created_at`) VALUES
 (2, 'Andi Wijaya', 50, 'Jl. Kenanga No. 8', 'Laki-laki', '90.20', 'Pernah naik tekanan darah saat stres', 'Sering makan gorengan dan kurang olahraga', 'Ya', 'Kadang jantung berdebar dan nyeri dada', '2025-09-30 17:40:58'),
-(16, 'Karolus Jone Kalang', 33, 'Makassar Jl. Bung No.1', 'Laki-laki', '33.00', 'Dari ayah', 'Tidak sehat dan makan makanan siap saji', 'Ya', 'Sakit kepala dan pusing dan susah tidur', '2025-10-13 07:49:48'),
-(20, 'Patrik Tandilintin', 33, 'Makassar Jl. Bung No.1', 'Perempuan', '33.00', 'dari keluarga', 'makan makanan instant', 'Tidak', 'Sakit di kaki dan pinggang', '2025-10-16 08:26:00'),
-(22, 'Mayanti Sepselia', 55, 'Makassar Jl. Bung', 'Perempuan', '40.00', 'Dari orang tua ', 'Makan makanan siap saji dan micin berlebihan', 'Ya', 'Sering pusing dan sakit kepala serta sakit di dada', '2025-10-17 11:32:46');
+(22, 'Mayanti Sepselia', 55, 'Makassar Jl. Bung', 'Perempuan', '40.00', 'Dari orang tua ', 'Makan makanan siap saji dan micin berlebihan', 'Ya', 'Sering pusing dan sakit kepala serta sakit di dada', '2025-10-17 11:32:46'),
+(42, 'Patrik Tangdilintin ', 34, 'Makassar', 'Laki-laki', '78.00', '56', 'Makan makanan siap saji', 'Ya', 'Sakit Pinggang dan pusing', '2025-10-20 08:26:55'),
+(47, 'Karolus Jone Kalang', 26, 'Makassar Jl. Bung No.5', 'Laki-laki', '56.00', 'Dari Keluarga Terutama IBU', 'Makan makanan siap saji dan micin', 'Ya', 'Pusing dan sakir kepala dan mual muntah', '2025-10-20 08:55:03'),
+(48, 'Muhamad Jalil', 33, 'Makassar BPT', 'Laki-laki', '77.00', 'Dari Keturunan nenek', 'Makan makanan dengan micin dan minum minuman botol terlalu sering', 'Ya', 'Pusing dan sakit kepala kalau terlalu lama duduk', '2025-10-20 08:58:45'),
+(49, 'Afdal Haq', 55, 'Makassar Jl. Landak No.5', 'Laki-laki', '78.00', 'Dari keluarga', 'Makan makanan siap saji ', 'Ya', 'Pusing dan sering stres dan cepat emosi', '2025-10-20 09:02:47');
 
 -- --------------------------------------------------------
 
@@ -116,10 +122,12 @@ CREATE TABLE `212341_rekam_medis` (
 --
 
 INSERT INTO `212341_rekam_medis` (`212341_rekam_id`, `212341_pasien_id`, `212341_tekanan_sistol`, `212341_tekanan_diastol`, `212341_tanggal_input`) VALUES
-(12, 2, 123, 123, '2025-10-16'),
-(13, 20, 12, 33, '2025-10-16'),
-(14, 16, 77, 90, '2025-10-16'),
-(15, 22, 130, 90, '2025-10-17');
+(12, 2, 80, 81, '2025-10-16'),
+(15, 22, 130, 90, '2025-10-17'),
+(40, 42, 123, 99, '2025-10-20'),
+(45, 47, 110, 80, '2025-10-20'),
+(46, 48, 170, 150, '2025-10-20'),
+(47, 49, 22, 22, '2025-10-20');
 
 --
 -- Indexes for dumped tables
@@ -160,25 +168,25 @@ ALTER TABLE `212341_rekam_medis`
 -- AUTO_INCREMENT for table `212341_admin`
 --
 ALTER TABLE `212341_admin`
-  MODIFY `212341_admin_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `212341_admin_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `212341_diagnosa`
 --
 ALTER TABLE `212341_diagnosa`
-  MODIFY `212341_diagnosa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `212341_diagnosa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `212341_pasien`
 --
 ALTER TABLE `212341_pasien`
-  MODIFY `212341_pasien_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `212341_pasien_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `212341_rekam_medis`
 --
 ALTER TABLE `212341_rekam_medis`
-  MODIFY `212341_rekam_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `212341_rekam_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- Constraints for dumped tables
