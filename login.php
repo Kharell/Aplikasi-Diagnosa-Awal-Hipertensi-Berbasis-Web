@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="col-md-5 mx-auto">
         <div class="card p-4">
-            <h3 class="text-center mb-3">Login</h3>
+            <h3 class="text-center mb-3">Login Admin</h3>
             <?php if (!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
             <?php if (isset($_GET['register']) && $_GET['register'] == "success") echo "<div class='alert alert-success'>Registrasi berhasil, silakan login.</div>"; ?>
 

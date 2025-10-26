@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container">
     <div class="col-md-5 mx-auto">
         <div class="card p-4">
-            <h3 class="text-center mb-4">Register Akun</h3>
+            <h3 class="text-center mb-4">Register Akun Admin</h3>
             <?php if (!empty($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
             <form method="post">
                 <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
