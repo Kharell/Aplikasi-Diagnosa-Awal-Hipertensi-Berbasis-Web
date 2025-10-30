@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 include "../config.php";
 
 // Ambil pasien terakhir yang baru input
@@ -206,4 +206,4 @@ document.getElementById("rekamForm").addEventListener("submit", function(e){
 </script>
 
 </body>
-</html>
+</html> -->

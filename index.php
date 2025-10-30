@@ -65,7 +65,7 @@
     <!-- Card utama -->
     <div class="main-card">
         <div class="d-grid gap-3">
-            <a href="pasien/inputDataPasien.php" class="btn btn-success">
+            <a href="pasien/diagnosaLengkap.php" class="btn btn-success">
                 <i class="bi bi-person-fill"></i> Jika Pasien - Silahkan Input Data Kamu
             </a>
             <a href="login.php" class="btn btn-primary">

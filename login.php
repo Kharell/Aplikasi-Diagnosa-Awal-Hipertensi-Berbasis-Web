@@ -114,6 +114,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <p class="mt-3 text-center text-white">Belum punya akun? <a href="register.php" class="text-dark fw-bold">Daftar disini</a></p>
     </div>
+    <br>
+    <!-- buton Kembali ke halaman utama -->
+ <div class="text-center mt-4">
+  <a href="index.php"
+     class="btn btn-light px-4 py-2 fw-semibold shadow-sm border-0 rounded-pill"
+     style="
+        color: #0066ff;
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+     "
+     onmouseover="this.style.backgroundColor='#e6f0ff'; this.style.color='#0044cc';"
+     onmouseout="this.style.backgroundColor='#ffffff'; this.style.color='#0066ff';">
+    <i class="bi bi-arrow-left-circle me-2"></i> Kembali Ke Halaman Utama
+  </a>
+</div>
+
 </div>
 
 <script>

@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 include "../config.php";
 
 // 🔹 Ambil hanya 1 data diagnosa terbaru (pasien terakhir yang input)
@@ -175,4 +175,4 @@ $data = mysqli_query($conn, $query);
 </div>
 
 </body>
-</html>
+</html> -->
