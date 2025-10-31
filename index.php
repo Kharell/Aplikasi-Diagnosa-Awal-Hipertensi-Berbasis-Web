@@ -60,7 +60,7 @@
 <body>
 
     <!-- Judul di luar card -->
-    <h2>Aplikasi <i>Diagnosa Hipertensi</i></h2>
+    <h2>Aplikasi <i>Diagnosa <b style="color: red;">Hipertensi</b></i></h2>
     <br>
     <!-- Card utama -->
     <div class="main-card">

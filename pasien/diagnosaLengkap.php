@@ -4,7 +4,19 @@ include "../config.php";
 $hasil_diagnosa = "";
 $klasifikasi = "";
 $nama = $umur = $jk = "";
+$show_modal = false;
 
+// 🔹 Tangani hasil redirect (GET setelah submit)
+if (isset($_GET['success'])) {
+    $show_modal = true;
+    $nama = $_GET['nama'] ?? '';
+    $umur = $_GET['umur'] ?? '';
+    $jk = $_GET['jk'] ?? '';
+    $hasil_diagnosa = $_GET['hasil'] ?? '';
+    $klasifikasi = $_GET['klasifikasi'] ?? '';
+}
+
+// 🔹 Tangani form POST (saat tombol Simpan diklik)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama = $_POST['nama'];
     $umur = $_POST['umur'];
@@ -12,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jk = $_POST['jk'];
     $berat_badan = $_POST['berat_badan'];
 
-    // Gabungkan checkbox
+    // Gabungkan checkbox menjadi teks
     $riwayat_tekanan = isset($_POST['riwayat_tekanan']) ? implode(", ", $_POST['riwayat_tekanan']) : '';
     $pola_makan = isset($_POST['pola_makan']) ? implode(", ", $_POST['pola_makan']) : '';
     $riwayat_keluarga = $_POST['riwayat_keluarga'];
@@ -58,12 +70,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt3->bind_param("isss", $rekam_id, $klasifikasi, $hasil_diagnosa, $tanggal_input);
     $stmt3->execute();
 
+    // Tutup koneksi prepared statement
     $stmt->close();
     $stmt2->close();
     $stmt3->close();
 
-    // Untuk menampilkan modal setelah submit
-    $show_modal = true;
+    // 🔹 Redirect ke halaman GET agar tidak duplikasi saat refresh
+    header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&nama=" . urlencode($nama) . "&umur=" . urlencode($umur) . "&jk=" . urlencode($jk) . "&hasil=" . urlencode($hasil_diagnosa) . "&klasifikasi=" . urlencode($klasifikasi));
+    exit();
 }
 ?>
 
@@ -185,8 +199,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
 
         <div class="col-12 text-center mt-4">
-            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">Simpan & Diagnosa</button>
             <a href="../index.php" class="btn btn-secondary px-4 ms-2">🏠 Kembali ke Halaman Utama</a>
+            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">Simpan & Diagnosa</button>
         </div>
     </form>
 </div>
@@ -208,13 +222,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p><?= htmlspecialchars($hasil_diagnosa) ?></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Tutup dan cek detail tekanan dengan ADMIN</button>
       </div>
     </div>
   </div>
 </div>
 
-<?php if (isset($show_modal) && $show_modal): ?>
+<?php if ($show_modal): ?>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     var hasilModal = new bootstrap.Modal(document.getElementById('hasilModal'));

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 30, 2025 at 06:46 AM
+-- Generation Time: Oct 30, 2025 at 02:36 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.22
 
@@ -63,7 +63,11 @@ CREATE TABLE `212341_diagnosa` (
 INSERT INTO `212341_diagnosa` (`212341_diagnosa_id`, `212341_rekam_id`, `212341_klasifikasi`, `212341_hasil`, `212341_tanggal_hasil`) VALUES
 (33, 51, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat.', '2025-10-30'),
 (34, 52, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat.', '2025-10-30'),
-(35, 53, 'Normal', 'Tekanan darah normal.', '2025-10-30');
+(35, 53, 'Normal', 'Tekanan darah normal.', '2025-10-30'),
+(37, 55, 'Pre-Hipertensi', 'Waspada! Tekanan darah mulai meningkat.', '2025-10-30'),
+(38, 56, 'Normal', 'Tekanan darah normal.', '2025-10-30'),
+(42, 59, 'Normal', 'Tekanan darah normal.', '2025-10-30'),
+(70, 51, 'Hipertensi', 'Segera periksa ke dokter. Tekanan darah tinggi', '2025-10-30');
 
 -- --------------------------------------------------------
 
@@ -92,7 +96,10 @@ CREATE TABLE `212341_pasien` (
 INSERT INTO `212341_pasien` (`212341_pasien_id`, `212341_nama`, `212341_umur`, `212341_alamat`, `212341_jk`, `212341_berat_badan`, `212341_riwayat_tekanan`, `212341_pola_makan`, `212341_riwayat_keluarga`, `212341_keluhan`, `212341_created_at`) VALUES
 (53, 'Patrik Tangdilintin ', 67, 'Makassar Jl. Landak No.5', 'Laki-laki', '88.00', 'Pernah tekanan darah tinggi, Sering stres berat', 'Sering makan gorengan, Sering minum kopi, Jarang makan sayur', 'Ya', 'Pusing, Sesak Napas, Jantung Berdebar', '2025-10-30 06:40:17'),
 (54, 'Karolus Jone Kalang', 77, 'Makassar Jl. Bung No.5', 'Laki-laki', '90.00', 'Sering stres berat', 'Sering minum kopi, Jarang makan sayur', 'Tidak', 'Sesak Napas, Jantung Berdebar', '2025-10-30 06:42:55'),
-(55, 'Mayanti Selseplia ', 66, 'Makassar BPT', 'Perempuan', '77.00', 'Pernah tekanan darah tinggi', 'Sering makan gorengan, Jarang makan sayur', 'Ya', 'Pusing', '2025-10-30 06:44:14');
+(55, 'Mayanti Selseplia ', 66, 'Makassar BPT', 'Perempuan', '77.00', 'Pernah tekanan darah tinggi', 'Sering makan gorengan, Jarang makan sayur', 'Ya', 'Pusing', '2025-10-30 06:44:14'),
+(57, 'Muhamad Jalil', 55, 'Perumahan Perdos No 10', 'Laki-laki', '67.00', 'Pernah tekanan darah tinggi', 'Sering minum kopi, Jarang makan sayur', 'Ya', 'Pusing, Jantung Berdebar', '2025-10-30 13:33:01'),
+(58, 'Ahmad Qhairul Mufti', 44, 'Perumahan Aspol ', 'Laki-laki', '57.00', 'Pernah tekanan darah tinggi', 'Sering makan gorengan, Sering minum kopi', 'Tidak', 'Pusing', '2025-10-30 13:36:03'),
+(61, 'Afdal Haq', 45, 'Petarani no 10', 'Laki-laki', '88.00', 'Sering stres berat', 'Sering minum kopi', 'Tidak', 'Jantung Berdebar', '2025-10-30 13:43:53');
 
 -- --------------------------------------------------------
 
@@ -113,9 +120,12 @@ CREATE TABLE `212341_rekam_medis` (
 --
 
 INSERT INTO `212341_rekam_medis` (`212341_rekam_id`, `212341_pasien_id`, `212341_tekanan_sistol`, `212341_tekanan_diastol`, `212341_tanggal_input`) VALUES
-(51, 53, 135, 88, '2025-10-30'),
+(51, 53, 150, 100, '2025-10-30'),
 (52, 54, 124, 99, '2025-10-30'),
-(53, 55, 100, 77, '2025-10-30');
+(53, 55, 100, 77, '2025-10-30'),
+(55, 57, 99, 88, '2025-10-30'),
+(56, 58, 60, 77, '2025-10-30'),
+(59, 61, 20, 10, '2025-10-30');
 
 --
 -- Indexes for dumped tables
@@ -162,19 +172,19 @@ ALTER TABLE `212341_admin`
 -- AUTO_INCREMENT for table `212341_diagnosa`
 --
 ALTER TABLE `212341_diagnosa`
-  MODIFY `212341_diagnosa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `212341_diagnosa_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
 -- AUTO_INCREMENT for table `212341_pasien`
 --
 ALTER TABLE `212341_pasien`
-  MODIFY `212341_pasien_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `212341_pasien_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `212341_rekam_medis`
 --
 ALTER TABLE `212341_rekam_medis`
-  MODIFY `212341_rekam_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `212341_rekam_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- Constraints for dumped tables
