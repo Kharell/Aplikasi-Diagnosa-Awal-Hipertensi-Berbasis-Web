@@ -1,0 +1,139 @@
+🩺 1. Apa itu Naive Bayes
+
+Naive Bayes adalah algoritma machine learning sederhana yang digunakan untuk mengklasifikasikan data berdasarkan peluang (probabilitas).
+Disebut naive (sederhana) karena algoritma ini menganggap setiap faktor input (seperti tekanan darah, pola makan, riwayat keluarga, dan keluhan) tidak saling memengaruhi satu sama lain.
+
+Dalam konteks diagnosa hipertensi, Naive Bayes menghitung peluang pasien mengalami kategori:
+
+- Tekanan darah rendah,
+
+- Normal,
+
+- Pre-hipertensi, atau
+
+- Hipertensi,
+
+berdasarkan data yang pasien masukkan ke sistem.
+Hasil dengan nilai peluang terbesar akan menjadi diagnosa akhir.
+
+
+
+⚙️ 2. Penerapan Naive Bayes ke Dalam Aplikasi Diagnosa Hipertensi
+
+Pada aplikasi diagnosa kamu, algoritma ini ditempatkan di bagian PHP (server side) yang memproses form input pasien.
+Jadi ketika pasien mengisi data — seperti tekanan darah, pola makan, riwayat keluarga, dan keluhan — sistem tidak langsung menentukan hasil menggunakan if-else, tetapi menghitung peluang dari setiap kategori menggunakan Naive Bayes.
+
+Langkah kerjanya di kode:
+
+1. Data dari form pasien dikirim (via $_POST).
+
+2.Algoritma Naive Bayes menghitung peluang tiap kategori (Rendah, Normal, Pre-Hipertensi, Hipertensi).
+
+3.Hasil dengan nilai peluang terbesar dipilih.
+
+4. Hasil tersebut disimpan ke database dan ditampilkan di modal hasil diagnosa.
+
+
+💻 3. Potongan Kode yang Digunakan
+
+Berikut bagian kode yang menjalankan algoritma Naive Bayes:
+
+function naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan) {
+    // Daftar kategori tekanan darah
+    $kelas = ['Rendah', 'Normal', 'Pre-Hipertensi', 'Hipertensi'];
+
+    // Probabilitas awal (semua sama)
+    $prob = array_fill_keys($kelas, 1.0);
+
+    // Faktor 1️⃣: Tekanan darah
+    if ($sistol < 90 || $diastol < 60) {
+        $prob['Rendah'] *= 0.8;
+    } elseif ($sistol < 120 && $diastol < 80) {
+        $prob['Normal'] *= 0.8;
+    } elseif (($sistol >= 120 && $sistol <= 139) || ($diastol >= 80 && $diastol <= 89)) {
+        $prob['Pre-Hipertensi'] *= 0.8;
+    } else {
+        $prob['Hipertensi'] *= 0.8;
+    }
+
+    // Faktor 2️⃣: Pola makan
+    if (strpos($pola_makan, 'asin') !== false || strpos($pola_makan, 'garam') !== false) {
+        $prob['Hipertensi'] *= 1.3;
+    }
+    if (strpos($pola_makan, 'gorengan') !== false) {
+        $prob['Pre-Hipertensi'] *= 1.2;
+    }
+    if (strpos($pola_makan, 'sayur') !== false || strpos($pola_makan, 'buah') !== false) {
+        $prob['Normal'] *= 1.2;
+    }
+
+    // Faktor 3️⃣: Riwayat keluarga
+    if ($riwayat_keluarga === 'Ya') {
+        $prob['Hipertensi'] *= 1.4;
+    } else {
+        $prob['Normal'] *= 1.2;
+    }
+
+    // Faktor 4️⃣: Keluhan
+    if (strpos($keluhan, 'pusing') !== false || strpos($keluhan, 'jantung') !== false) {
+        $prob['Hipertensi'] *= 1.3;
+    }
+    if (strpos($keluhan, 'lemas') !== false) {
+        $prob['Rendah'] *= 1.2;
+    }
+    if (strpos($keluhan, 'sesak') !== false) {
+        $prob['Pre-Hipertensi'] *= 1.1;
+    }
+
+    // Pilih hasil dengan peluang terbesar
+    arsort($prob);
+    $hasil = key($prob);
+
+    // Tentukan pesan hasil diagnosa
+    switch ($hasil) {
+        case 'Rendah':
+            $pesan = "Tekanan darah rendah. Perbanyak istirahat dan konsumsi air putih.";
+            break;
+        case 'Normal':
+            $pesan = "Tekanan darah normal. Pertahankan gaya hidup sehat!";
+            break;
+        case 'Pre-Hipertensi':
+            $pesan = "Tekanan darah mulai meningkat. Jaga pola makan dan rutin berolahraga.";
+            break;
+        case 'Hipertensi':
+            $pesan = "Tekanan darah tinggi. Segera konsultasikan ke dokter.";
+            break;
+    }
+
+    return [$hasil, $pesan];
+}
+
+
+
+🔍 4. Penjelasan Tiap Bagian Kode (Langkah demi Langkah)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Bagian Kode                                                      | Penjelasan                                                                                                                                                                         |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$kelas = ['Rendah', 'Normal', 'Pre-Hipertensi', 'Hipertensi'];` | Menentukan empat kategori yang mungkin menjadi hasil diagnosa.                                                                                                                     |
+| `$prob = array_fill_keys($kelas, 1.0);`                          | Menginisialisasi peluang awal setiap kategori dengan nilai yang sama (1.0).                                                                                                        |
+| **Faktor Tekanan Darah**                                         | Jika nilai sistol dan diastol berada di rentang tertentu, peluang kategori tersebut akan dikalikan angka yang lebih besar. Misalnya, sistol tinggi → peluang hipertensi bertambah. |
+| **Faktor Pola Makan**                                            | Jika pasien sering makan asin atau gorengan, maka peluang untuk *Pre-Hipertensi* atau *Hipertensi* naik. Jika sering makan sayur, peluang *Normal* naik.                           |
+| **Faktor Riwayat Keluarga**                                      | Jika ada riwayat keluarga hipertensi, maka peluang kategori *Hipertensi* meningkat.                                                                                                |
+| **Faktor Keluhan**                                               | Keluhan seperti pusing atau jantung berdebar menambah peluang *Hipertensi*, sementara keluhan lemas menambah peluang *Rendah*.                                                     |
+| `arsort($prob);`                                                 | Mengurutkan hasil peluang dari yang tertinggi ke terendah.                                                                                                                         |
+| `$hasil = key($prob);`                                           | Mengambil kategori dengan nilai peluang tertinggi sebagai hasil akhir diagnosa.                                                                                                    |
+| **Bagian `switch`**                                              | Menentukan pesan yang akan ditampilkan sesuai hasil akhir, seperti saran medis atau gaya hidup.                                                                                    |
+| `return [$hasil, $pesan];`                                       | Mengembalikan hasil diagnosa dan pesan ke kode utama agar bisa ditampilkan di modal.                                                                                               |
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+✅ Kesimpulan Singkat
+
+Dengan penerapan Naive Bayes di dalam kode kamu:
+
+Diagnosa tidak lagi hanya bergantung pada angka tekanan darah.
+
+Sistem menganalisis beberapa faktor sekaligus dengan logika probabilistik.
+
+Hasil lebih akurat, realistis, dan fleksibel

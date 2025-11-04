@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute();
     $pasien_id = $conn->insert_id;
 
-    // 🔹 Simpan ke tabel rekam medis
+    // 🔹 Simpan ke tabel rekam medis 🔹
     $stmt2 = $conn->prepare("INSERT INTO 212341_rekam_medis 
         (212341_pasien_id, 212341_tekanan_sistol, 212341_tekanan_diastol, 212341_tanggal_input)
         VALUES (?, ?, ?, ?)");
@@ -51,19 +51,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt2->execute();
     $rekam_id = $conn->insert_id;
 
-    // 🔹 Hitung hasil diagnosa otomatis
-    if ($sistol < 120 && $diastol < 80) {
-        $klasifikasi = "Normal";
-        $hasil_diagnosa = "Tekanan darah normal.";
-    } elseif (($sistol >= 120 && $sistol <= 139) || ($diastol >= 80 && $diastol <= 89)) {
-        $klasifikasi = "Pre-Hipertensi";
-        $hasil_diagnosa = "Waspada! Tekanan darah mulai meningkat.";
-    } else {
-        $klasifikasi = "Hipertensi";
-        $hasil_diagnosa = "Segera periksa ke dokter. Tekanan darah tinggi.";
+    // ============================================
+    // 🔹 ALGORITMA NAIVE BAYES 🔹
+    // ============================================
+    function naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan) {
+        $kelas = ['Rendah', 'Normal', 'Pre-Hipertensi', 'Hipertensi'];
+        $prob = [];
+        foreach ($kelas as $k) {
+            $prob[$k] = 1.0;
+        }
+
+        // ---- Tekanan darah ----
+        if ($sistol < 90 || $diastol < 60) {
+            $prob['Rendah'] *= 0.8;
+        } elseif ($sistol < 120 && $diastol < 80) {
+            $prob['Normal'] *= 0.8;
+        } elseif (($sistol >= 120 && $sistol <= 139) || ($diastol >= 80 && $diastol <= 89)) {
+            $prob['Pre-Hipertensi'] *= 0.8;
+        } else {
+            $prob['Hipertensi'] *= 0.8;
+        }
+
+        // ---- Pola makan ----
+        if (strpos($pola_makan, 'Makanan tinggi garam') !== false) $prob['Hipertensi'] *= 1.3;
+        if (strpos($pola_makan, 'Sering makan gorengan') !== false) $prob['Pre-Hipertensi'] *= 1.2;
+        if (strpos($pola_makan, 'Jarang makan sayur') !== false) $prob['Rendah'] *= 1.1;
+
+        // ---- Riwayat keluarga ----
+        if ($riwayat_keluarga === 'Ya') $prob['Hipertensi'] *= 1.4;
+        else $prob['Normal'] *= 1.2;
+
+        // ---- Keluhan ----
+        if (strpos($keluhan, 'Pusing') !== false || strpos($keluhan, 'Jantung Berdebar') !== false)
+            $prob['Hipertensi'] *= 1.3;
+        if (strpos($keluhan, 'Sesak Napas') !== false)
+            $prob['Pre-Hipertensi'] *= 1.1;
+
+        // ---- Pilih probabilitas tertinggi ----
+        arsort($prob);
+        $hasil = key($prob);
+
+        switch ($hasil) {
+            case 'Rendah':
+                $pesan = "Tekanan darah rendah (hipotensi). Perbanyak istirahat dan konsumsi air putih.";
+                break;
+            case 'Normal':
+                $pesan = "Tekanan darah normal. Pertahankan pola hidup sehat!";
+                break;
+            case 'Pre-Hipertensi':
+                $pesan = "Waspada! Tekanan darah mulai meningkat, jaga pola makan dan olahraga.";
+                break;
+            case 'Hipertensi':
+                $pesan = "Tekanan darah tinggi. Segera konsultasikan ke dokter.";
+                break;
+        }
+        return [$hasil, $pesan];
     }
 
-    // 🔹 Simpan ke tabel diagnosa
+    // 🔹 Panggil fungsi Naive Bayes
+    list($klasifikasi, $hasil_diagnosa) = naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan);
+
+    // ============================================
+
+    // 🔹 Simpan ke tabel diagnosa 🔹
     $stmt3 = $conn->prepare("INSERT INTO 212341_diagnosa 
         (212341_rekam_id, 212341_klasifikasi, 212341_hasil, 212341_tanggal_hasil)
         VALUES (?, ?, ?, ?)");
@@ -75,11 +125,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt2->close();
     $stmt3->close();
 
-    // 🔹 Redirect ke halaman GET agar tidak duplikasi saat refresh
+    // 🔹 Redirect agar tidak duplikasi saat refresh 🔹
     header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&nama=" . urlencode($nama) . "&umur=" . urlencode($umur) . "&jk=" . urlencode($jk) . "&hasil=" . urlencode($hasil_diagnosa) . "&klasifikasi=" . urlencode($klasifikasi));
     exit();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="id">
