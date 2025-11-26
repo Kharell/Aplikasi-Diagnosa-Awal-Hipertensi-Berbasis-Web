@@ -5,6 +5,7 @@ $hasil_diagnosa = "";
 $klasifikasi = "";
 $nama = $umur = $jk = "";
 $show_modal = false;
+$alert = ""; // 🔥 TAMBAHAN — penampung alert Bootstrap
 
 // 🔹 Tangani hasil redirect (GET setelah submit)
 if (isset($_GET['success'])) {
@@ -20,114 +21,144 @@ if (isset($_GET['success'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama = $_POST['nama'];
     $umur = $_POST['umur'];
-    $alamat = $_POST['alamat'];
-    $jk = $_POST['jk'];
-    $berat_badan = $_POST['berat_badan'];
 
-    // Gabungkan checkbox menjadi teks
-    $riwayat_tekanan = isset($_POST['riwayat_tekanan']) ? implode(", ", $_POST['riwayat_tekanan']) : '';
-    $pola_makan = isset($_POST['pola_makan']) ? implode(", ", $_POST['pola_makan']) : '';
-    $riwayat_keluarga = $_POST['riwayat_keluarga'];
-    $keluhan = isset($_POST['keluhan']) ? implode(", ", $_POST['keluhan']) : '';
+    // 🔥 VALIDASI UMUR MINIMAL 18 TAHUN — DIGANTI MENJADI ALERT BOOTSTRAP
+    if ($umur < 18) {
 
-    $sistol = $_POST['sistol'];
-    $diastol = $_POST['diastol'];
-    $tanggal_input = date('Y-m-d');
+        $alert = "
+            <div class='alert alert-danger border-0 shadow-sm fade show mt-3 p-4 rounded-4' role='alert'>
+                <div class='d-flex'>
+                    <div class='me-3'>
+                        <span class='badge bg-danger p-3 rounded-circle'>
+                            <svg xmlns='http://www.w3.org/2000/svg' width='26' height='26' fill='white' class='bi bi-exclamation-triangle-fill' viewBox='0 0 16 16'>
+                                <path d='M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 0 8 5m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2'/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div>
+                        <h5 class='fw-bold mb-1 text-danger'>Usia Tidak Valid!</h5>
+                        <p class='m-0'>
+                            Usia yang Anda masukkan <strong>$umur tahun</strong> tidak memenuhi ketentuan.
+                            Minimal usia yang diperbolehkan untuk diagnosa ini adalah 
+                            <strong>18 tahun ke atas</strong>.
+                        </p>
+                    </div>
+                </div>
+                <button type='button' class='btn-close position-absolute top-0 end-0 m-3' data-bs-dismiss='alert'></button>
+            </div>
+            ";
 
-    // 🔹 Simpan ke tabel pasien
-    $stmt = $conn->prepare("INSERT INTO 212341_pasien 
-        (212341_nama, 212341_umur, 212341_alamat, 212341_jk, 212341_berat_badan, 
-         212341_riwayat_tekanan, 212341_pola_makan, 212341_riwayat_keluarga, 212341_keluhan)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sisssssss", $nama, $umur, $alamat, $jk, $berat_badan, $riwayat_tekanan, $pola_makan, $riwayat_keluarga, $keluhan);
-    $stmt->execute();
-    $pasien_id = $conn->insert_id;
+    } else {
 
-    // 🔹 Simpan ke tabel rekam medis 🔹
-    $stmt2 = $conn->prepare("INSERT INTO 212341_rekam_medis 
-        (212341_pasien_id, 212341_tekanan_sistol, 212341_tekanan_diastol, 212341_tanggal_input)
-        VALUES (?, ?, ?, ?)");
-    $stmt2->bind_param("iiis", $pasien_id, $sistol, $diastol, $tanggal_input);
-    $stmt2->execute();
-    $rekam_id = $conn->insert_id;
+        $alamat = $_POST['alamat'];
+        $jk = $_POST['jk'];
+        $berat_badan = $_POST['berat_badan'];
 
-    // ============================================
-    // 🔹 ALGORITMA NAIVE BAYES 🔹
-    // ============================================
-    function naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan) {
-        $kelas = ['Rendah', 'Normal', 'Pre-Hipertensi', 'Hipertensi'];
-        $prob = [];
-        foreach ($kelas as $k) {
-            $prob[$k] = 1.0;
+        // Gabungkan checkbox menjadi teks
+        $riwayat_tekanan = isset($_POST['riwayat_tekanan']) ? implode(", ", $_POST['riwayat_tekanan']) : '';
+        $pola_makan = isset($_POST['pola_makan']) ? implode(", ", $_POST['pola_makan']) : '';
+        $riwayat_keluarga = $_POST['riwayat_keluarga'];
+        $keluhan = isset($_POST['keluhan']) ? implode(", ", $_POST['keluhan']) : '';
+
+        $sistol = $_POST['sistol'];
+        $diastol = $_POST['diastol'];
+        $tanggal_input = date('Y-m-d');
+
+        // 🔹 Simpan ke tabel pasien
+        $stmt = $conn->prepare("INSERT INTO 212341_pasien 
+            (212341_nama, 212341_umur, 212341_alamat, 212341_jk, 212341_berat_badan, 
+             212341_riwayat_tekanan, 212341_pola_makan, 212341_riwayat_keluarga, 212341_keluhan)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sisssssss", $nama, $umur, $alamat, $jk, $berat_badan, $riwayat_tekanan, $pola_makan, $riwayat_keluarga, $keluhan);
+        $stmt->execute();
+        $pasien_id = $conn->insert_id;
+
+        // 🔹 Simpan ke tabel rekam medis 🔹
+        $stmt2 = $conn->prepare("INSERT INTO 212341_rekam_medis 
+            (212341_pasien_id, 212341_tekanan_sistol, 212341_tekanan_diastol, 212341_tanggal_input)
+            VALUES (?, ?, ?, ?)");
+        $stmt2->bind_param("iiis", $pasien_id, $sistol, $diastol, $tanggal_input);
+        $stmt2->execute();
+        $rekam_id = $conn->insert_id;
+
+        // ============================================
+        // 🔹 ALGORITMA NAIVE BAYES 🔹
+        // ============================================
+        function naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan) {
+            $kelas = ['Rendah', 'Normal', 'Pre-Hipertensi', 'Hipertensi'];
+            $prob = [];
+            foreach ($kelas as $k) {
+                $prob[$k] = 1.0;
+            }
+
+            // ---- Tekanan darah ----
+            if ($sistol < 90 || $diastol < 60) {
+                $prob['Rendah'] *= 0.8;
+            } elseif ($sistol < 120 && $diastol < 80) {
+                $prob['Normal'] *= 0.8;
+            } elseif (($sistol >= 120 && $sistol <= 139) || ($diastol >= 80 && $diastol <= 89)) {
+                $prob['Pre-Hipertensi'] *= 0.8;
+            } else {
+                $prob['Hipertensi'] *= 0.8;
+            }
+
+            // ---- Pola makan ----
+            if (strpos($pola_makan, 'Makanan tinggi garam') !== false) $prob['Hipertensi'] *= 1.3;
+            if (strpos($pola_makan, 'Sering makan gorengan') !== false) $prob['Pre-Hipertensi'] *= 1.2;
+            if (strpos($pola_makan, 'Jarang makan sayur') !== false) $prob['Rendah'] *= 1.1;
+
+            // ---- Riwayat keluarga ----
+            if ($riwayat_keluarga === 'Ya') $prob['Hipertensi'] *= 1.4;
+            else $prob['Normal'] *= 1.2;
+
+            // ---- Keluhan ----
+            if (strpos($keluhan, 'Pusing') !== false || strpos($keluhan, 'Jantung Berdebar') !== false)
+                $prob['Hipertensi'] *= 1.3;
+            if (strpos($keluhan, 'Sesak Napas') !== false)
+                $prob['Pre-Hipertensi'] *= 1.1;
+
+            // ---- Pilih probabilitas tertinggi ----
+            arsort($prob);
+            $hasil = key($prob);
+
+            switch ($hasil) {
+                case 'Rendah':
+                    $pesan = "Tekanan darah rendah (hipotensi). Perbanyak istirahat dan konsumsi air putih.";
+                    break;
+                case 'Normal':
+                    $pesan = "Tekanan darah normal. Pertahankan pola hidup sehat!";
+                    break;
+                case 'Pre-Hipertensi':
+                    $pesan = "Waspada! Tekanan darah mulai meningkat, jaga pola makan dan olahraga.";
+                    break;
+                case 'Hipertensi':
+                    $pesan = "Tekanan darah tinggi. Segera konsultasikan ke dokter.";
+                    break;
+            }
+            return [$hasil, $pesan];
         }
 
-        // ---- Tekanan darah ----
-        if ($sistol < 90 || $diastol < 60) {
-            $prob['Rendah'] *= 0.8;
-        } elseif ($sistol < 120 && $diastol < 80) {
-            $prob['Normal'] *= 0.8;
-        } elseif (($sistol >= 120 && $sistol <= 139) || ($diastol >= 80 && $diastol <= 89)) {
-            $prob['Pre-Hipertensi'] *= 0.8;
-        } else {
-            $prob['Hipertensi'] *= 0.8;
-        }
+        // 🔹 Panggil fungsi Naive Bayes
+        list($klasifikasi, $hasil_diagnosa) = naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan);
 
-        // ---- Pola makan ----
-        if (strpos($pola_makan, 'Makanan tinggi garam') !== false) $prob['Hipertensi'] *= 1.3;
-        if (strpos($pola_makan, 'Sering makan gorengan') !== false) $prob['Pre-Hipertensi'] *= 1.2;
-        if (strpos($pola_makan, 'Jarang makan sayur') !== false) $prob['Rendah'] *= 1.1;
+        // ============================================
 
-        // ---- Riwayat keluarga ----
-        if ($riwayat_keluarga === 'Ya') $prob['Hipertensi'] *= 1.4;
-        else $prob['Normal'] *= 1.2;
+        // 🔹 Simpan ke tabel diagnosa 🔹
+        $stmt3 = $conn->prepare("INSERT INTO 212341_diagnosa 
+            (212341_rekam_id, 212341_klasifikasi, 212341_hasil, 212341_tanggal_hasil)
+            VALUES (?, ?, ?, ?)");
+        $stmt3->bind_param("isss", $rekam_id, $klasifikasi, $hasil_diagnosa, $tanggal_input);
+        $stmt3->execute();
 
-        // ---- Keluhan ----
-        if (strpos($keluhan, 'Pusing') !== false || strpos($keluhan, 'Jantung Berdebar') !== false)
-            $prob['Hipertensi'] *= 1.3;
-        if (strpos($keluhan, 'Sesak Napas') !== false)
-            $prob['Pre-Hipertensi'] *= 1.1;
+        // Tutup koneksi prepared statement
+        $stmt->close();
+        $stmt2->close();
+        $stmt3->close();
 
-        // ---- Pilih probabilitas tertinggi ----
-        arsort($prob);
-        $hasil = key($prob);
-
-        switch ($hasil) {
-            case 'Rendah':
-                $pesan = "Tekanan darah rendah (hipotensi). Perbanyak istirahat dan konsumsi air putih.";
-                break;
-            case 'Normal':
-                $pesan = "Tekanan darah normal. Pertahankan pola hidup sehat!";
-                break;
-            case 'Pre-Hipertensi':
-                $pesan = "Waspada! Tekanan darah mulai meningkat, jaga pola makan dan olahraga.";
-                break;
-            case 'Hipertensi':
-                $pesan = "Tekanan darah tinggi. Segera konsultasikan ke dokter.";
-                break;
-        }
-        return [$hasil, $pesan];
+        // 🔹 Redirect agar tidak duplikasi saat refresh 🔹
+        header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&nama=" . urlencode($nama) . "&umur=" . urlencode($umur) . "&jk=" . urlencode($jk) . "&hasil=" . urlencode($hasil_diagnosa) . "&klasifikasi=" . urlencode($klasifikasi));
+        exit();
     }
-
-    // 🔹 Panggil fungsi Naive Bayes
-    list($klasifikasi, $hasil_diagnosa) = naiveBayesDiagnosa($sistol, $diastol, $pola_makan, $riwayat_keluarga, $keluhan);
-
-    // ============================================
-
-    // 🔹 Simpan ke tabel diagnosa 🔹
-    $stmt3 = $conn->prepare("INSERT INTO 212341_diagnosa 
-        (212341_rekam_id, 212341_klasifikasi, 212341_hasil, 212341_tanggal_hasil)
-        VALUES (?, ?, ?, ?)");
-    $stmt3->bind_param("isss", $rekam_id, $klasifikasi, $hasil_diagnosa, $tanggal_input);
-    $stmt3->execute();
-
-    // Tutup koneksi prepared statement
-    $stmt->close();
-    $stmt2->close();
-    $stmt3->close();
-
-    // 🔹 Redirect agar tidak duplikasi saat refresh 🔹
-    header("Location: " . $_SERVER['PHP_SELF'] . "?success=1&nama=" . urlencode($nama) . "&umur=" . urlencode($umur) . "&jk=" . urlencode($jk) . "&hasil=" . urlencode($hasil_diagnosa) . "&klasifikasi=" . urlencode($klasifikasi));
-    exit();
 }
 ?>
 
@@ -141,6 +172,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body class="bg-light">
 <div class="container mt-5 mb-5 p-4 shadow-lg bg-white rounded-4">
+
+    <!-- 🔥 ALERT BOOTSTRAP MUNCUL DI SINI -->
+    <?= $alert ?>
+
     <h2 class="text-center text-primary fw-bold mb-4">Form Input & Diagnosa Pasien</h2>
 
     <form method="POST" class="row g-3">
@@ -150,18 +185,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label>Nama Lengkap</label>
             <input type="text" name="nama" class="form-control" required>
         </div>
+
         <div class="col-md-3">
-            <label>Umur</label>
-            <input type="number" name="umur" class="form-control" required>
+            <label>Umur (18 tahun ke atas)</label> <!-- 🔥 TULISAN TAMBAHAN -->
+           <input type="number" name="umur" class="form-control" required **min="18"**>
         </div>
+
         <div class="col-md-3">
             <label>Berat Badan (kg)</label>
             <input type="text" name="berat_badan" class="form-control" required>
         </div>
+
         <div class="col-md-6">
             <label>Alamat</label>
             <input type="text" name="alamat" class="form-control" required>
         </div>
+
         <div class="col-md-6">
             <label>Jenis Kelamin</label>
             <select name="jk" class="form-select" required>
@@ -184,6 +223,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label class="form-check-label">Sering stres berat</label>
             </div>
         </div>
+
         <div class="col-md-6">
             <label>Riwayat Keluarga</label>
             <select name="riwayat_keluarga" class="form-select">
